@@ -28,6 +28,7 @@ public class RaycastMask : MonoBehaviour
         var frustumHalfWidth = frustumHalfHeight * camera.aspect;
 
         // 回転を設定
+        maskObject.transform.position = camera.transform.position;
         maskObject.transform.localRotation = camera.transform.localRotation;
 
         // マスクの距離、サイズを設定

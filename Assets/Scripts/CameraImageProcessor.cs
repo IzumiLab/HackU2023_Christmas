@@ -15,6 +15,9 @@ using OpenCVForUnity.ArucoModule;
 using OpenCVForUnity.ObjdetectModule;
 using OpenCVForUnity.Calib3dModule;
 using Unity.Mathematics;
+using Unity.Collections;
+using DataStructures.ViliWonka.KDTree;
+using UnityEngine.UIElements;
 
 class ProcessImageArgs
 {
@@ -29,29 +32,44 @@ class ProcessImageArgs
 [RequireComponent(typeof(ARFoundationCameraToMatHelper))]
 public class CameraImageProcessor : MonoBehaviour
 {
+    //------GetComponentから初期化------
+
     LampDetectionHelper m_lampHelper;
 
     ParticleSystem m_particleSystem;
 
     ARFoundationCameraToMatHelper m_cameraTextureToMatHelper;
 
-    [SerializeField]
-    Camera m_arCamera;
+    //------エディタで設定------
 
     [SerializeField]
-    ARCameraManager m_cameraManager;
+    RaycastMask m_raycastMask;
 
-    ParticleSystem.Particle[] m_Particles;
+    //------プロパティ------
 
-    int m_NumParticles;
-
-    static List<Vector3> s_Vertices = new List<Vector3>();
-    
     /// <summary>
-    /// 円のサイズの閾値
+    /// ランプを配置する距離
     /// </summary>
-    [Range(0.0f, 1000.0f)]
-    public double SizeThreshold = 500;
+    public float LampDistance = 5.0f;
+
+    //------
+
+    /// <summary>
+    /// ParticleSystem.SetParticlesに送る前のパーティクル
+    /// Alloc回数削減のため再利用
+    /// </summary>
+    List<ParticleSystem.Particle> m_newParticleBuffer = new List<ParticleSystem.Particle>();
+
+    /// <summary>
+    /// KDTree.Buildに送る前の座標
+    /// Alloc回数削減のため再利用
+    /// </summary>
+    List<Vector3> m_newKdNodes = new List<Vector3>();
+
+    /// <summary>
+    /// イルミネーションのランプの位置を保存するKD木
+    /// </summary>
+    KDTree m_lampKdTree = new KDTree();
 
     void Start()
     {
@@ -63,9 +81,6 @@ public class CameraImageProcessor : MonoBehaviour
         m_cameraTextureToMatHelper.Initialize();
     }
 
-    /// <summary>
-    /// Raises the destroy event.
-    /// </summary>
     void OnDestroy()
     {
         m_cameraTextureToMatHelper.frameMatAcquired -= OnFrameMatAcquired;
@@ -82,90 +97,79 @@ public class CameraImageProcessor : MonoBehaviour
         Debug.Log("OnWebCamTextureToMatHelperDisposed");
     }
 
-    /// <summary>
-    /// Raises the webcam texture to mat helper error occurred event.
-    /// </summary>
-    /// <param name="errorCode">Error code.</param>
     public void OnWebCamTextureToMatHelperErrorOccurred(WebCamTextureToMatHelper.ErrorCode errorCode)
     {
         Debug.Log("OnWebCamTextureToMatHelperErrorOccurred " + errorCode);
     }
 
-    private void OnFrameMatAcquired(
-        Mat mat, 
+    void TakeSnapshot(Mat image)
+    {
+        // ARCameraManagerからカメラを取得
+        var camera = m_cameraTextureToMatHelper.GetARCameraManager().GetComponent<Camera>();
+
+        // 画像からランプ位置を検出
+        var lamps = m_lampHelper.Run(image);
+
+        m_newParticleBuffer.Clear();
+        m_newKdNodes.Clear();
+
+        foreach (var lamp in lamps)
+        {
+            Ray rayFromCamera = camera.ScreenPointToRay(lamp.Position);
+
+            if (Physics.Raycast(rayFromCamera, LampDistance, m_raycastMask.RaycastMaskLayer))
+            {
+                // マスクに衝突したらスキップ
+                continue;
+            }
+
+            var lampWorldPos = rayFromCamera.GetPoint(LampDistance);
+
+            // パーティクルを追加
+            m_newParticleBuffer.Add(new ParticleSystem.Particle
+            {
+                startColor = lamp.Color,
+                startSize = lamp.Area * 0.01f,
+                position = lampWorldPos,
+                remainingLifetime = float.PositiveInfinity
+            });
+
+            // KD木に座標を追加
+            m_newKdNodes.Add(lampWorldPos);
+        }
+
+        // バッファをParticleSystemの末尾に挿入
+        m_particleSystem.SetParticles(
+            m_newParticleBuffer.ToArray(), 
+            size: m_newParticleBuffer.Count, 
+            offset: m_particleSystem.particleCount
+        );
+
+        // KD木を再構築
+        m_lampKdTree.Build(m_newKdNodes);
+
+        // パーティクルとKD木のノードのインデックスは連動している必要があるので念のため
+        Debug.Assert(m_particleSystem.particleCount == m_lampKdTree.Count);
+
+        // 最後にマスクを追加
+        m_raycastMask.AppendMask(camera);
+    }
+
+    void OnFrameMatAcquired(
+        Mat image, 
         Matrix4x4 projectionMatrix, 
         Matrix4x4 cameraToWorldMatrix, 
         XRCameraIntrinsics cameraIntrinsics, 
         long timestamp)
     {
-        Mat tmp = new Mat();
-        mat.copyTo(tmp);
-
-        ProcessImageArgs args = new ProcessImageArgs
+        var cameraManager = m_cameraTextureToMatHelper.GetARCameraManager();
+        var cameraForwardRay = new Ray(cameraManager.transform.position, cameraManager.transform.forward);
+        if (!Physics.Raycast(cameraForwardRay, LampDistance, m_raycastMask.RaycastMaskLayer))
         {
-            Image = tmp,
-            ProjectionMatrix = projectionMatrix,
-            CameraToWorldMatrix = cameraToWorldMatrix,
-        };
+            // 向いている方向がマスクの範囲外
+            // →まだ撮影していないので撮影
 
-        // スレッドプール(バックグラウンド)で画像処理
-        UniTask.RunOnThreadPool(ProcessImage, args);
-    }
-
-    async UniTaskVoid ProcessImage(object input)
-    {
-        DetectedLampInfo[] lamps;
-        Vector2Int imageSize;
-
-        // !!!!![Thread Pool]!!!!!
-
-        ProcessImageArgs args = (ProcessImageArgs)input;
-
-        imageSize = new Vector2Int(args.Image.width(), args.Image.height());
-        lamps = m_lampHelper.Run(args.Image);
-
-        args.Image.Dispose();
-        
-        // !!!!![Main Thread]!!!!!
-
-        await UniTask.SwitchToMainThread(PlayerLoopTiming.Update);
-
-        s_Vertices.Clear();
-
-        if (lamps.Length != 0)
-        {
-            foreach (var lamp in lamps)
-            {
-                var cameraPos = new Vector3(lamp.Position.x / imageSize.x - 0.5f, lamp.Position.y / imageSize.y - 0.5f, -10);
-                var worldPos = args.CameraToWorldMatrix.MultiplyPoint(cameraPos);
-
-                s_Vertices.Add(worldPos);
-            }
+            TakeSnapshot(image);
         }
-
-        int numParticles = s_Vertices.Count;
-        if (m_Particles == null || m_Particles.Length < numParticles)
-            m_Particles = new ParticleSystem.Particle[numParticles];
-
-        var color = m_particleSystem.main.startColor.color;
-        var size = m_particleSystem.main.startSize.constant;
-
-        for (int i = 0; i < numParticles; ++i)
-        {
-            m_Particles[i].startColor = color;
-            m_Particles[i].startSize = size;
-            m_Particles[i].position = s_Vertices[i];
-            m_Particles[i].remainingLifetime = 1f;
-        }
-
-        // Remove any existing particles by setting remainingLifetime
-        // to a negative value.
-        for (int i = numParticles; i < m_NumParticles; ++i)
-        {
-            m_Particles[i].remainingLifetime = -1f;
-        }
-
-        m_particleSystem.SetParticles(m_Particles, Math.Max(numParticles, m_NumParticles));
-        m_NumParticles = numParticles;
     }
 }
