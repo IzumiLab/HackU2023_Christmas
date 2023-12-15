@@ -61,12 +61,6 @@ public class CameraImageProcessor : MonoBehaviour
     List<ParticleSystem.Particle> m_newParticleBuffer = new List<ParticleSystem.Particle>();
 
     /// <summary>
-    /// KDTree.Buildに送る前の座標
-    /// Alloc回数削減のため再利用
-    /// </summary>
-    List<Vector3> m_newKdNodes = new List<Vector3>();
-
-    /// <summary>
     /// イルミネーションのランプの位置を保存するKD木
     /// </summary>
     KDTree m_lampKdTree = new KDTree();
@@ -111,7 +105,6 @@ public class CameraImageProcessor : MonoBehaviour
         var lamps = m_lampHelper.Run(image);
 
         m_newParticleBuffer.Clear();
-        m_newKdNodes.Clear();
 
         foreach (var lamp in lamps)
         {
@@ -129,13 +122,10 @@ public class CameraImageProcessor : MonoBehaviour
             m_newParticleBuffer.Add(new ParticleSystem.Particle
             {
                 startColor = lamp.Color,
-                startSize = lamp.Area * 0.01f,
+                startSize = Math.Min(lamp.Area * 0.1f, 0.5f),
                 position = lampWorldPos,
                 remainingLifetime = float.PositiveInfinity
             });
-
-            // KD木に座標を追加
-            m_newKdNodes.Add(lampWorldPos);
         }
 
         // バッファをParticleSystemの末尾に挿入
@@ -146,10 +136,14 @@ public class CameraImageProcessor : MonoBehaviour
         );
 
         // KD木を再構築
-        m_lampKdTree.Build(m_newKdNodes);
+        var kdTreeBegin = m_lampKdTree.Count;
+        m_lampKdTree.SetCount(m_lampKdTree.Count + m_newParticleBuffer.Count);
+        for (int i = 0; i < m_newParticleBuffer.Count; i++)
+        {
+            m_lampKdTree.Points[kdTreeBegin + i] = m_newParticleBuffer[i].position;
+        }
+        m_lampKdTree.Rebuild();
 
-        // パーティクルとKD木のノードのインデックスは連動している必要があるので念のため
-        Debug.Assert(m_particleSystem.particleCount == m_lampKdTree.Count);
 
         // 最後にマスクを追加
         m_raycastMask.AppendMask(camera);
