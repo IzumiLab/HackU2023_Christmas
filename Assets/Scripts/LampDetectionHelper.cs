@@ -20,7 +20,7 @@ public struct DetectedLampInfo
 public class LampDetectionHelper : MonoBehaviour
 {
     /// <summary>
-    /// イルミネーションの閾値
+    /// 繧､繝ｫ繝溘ロ繝ｼ繧ｷ繝ｧ繝ｳ縺ｮ髢ｾ蛟､
     /// </summary>
     [Range(0, 255)]
     public int ValueThreshold = 200;
@@ -63,7 +63,7 @@ public class LampDetectionHelper : MonoBehaviour
 
         if (m_debugImage != null)
         {
-            // UpdateDebugImageによってDisposeする
+            // UpdateDebugImage縺ｫ繧医▲縺ｦDispose縺吶ｋ
             Mat internalImg = new Mat(); 
 
             Mat source = m_illuminationMask;
@@ -79,7 +79,7 @@ public class LampDetectionHelper : MonoBehaviour
             {
                 Position = new(
                     (float)centroids.get(i, 0)[0], 
-                    rgb24Image.height() - (float)centroids.get(i, 1)[0] // Unityの座標系に変換
+                    rgb24Image.height() - (float)centroids.get(i, 1)[0] // Unity縺ｮ蠎ｧ讓咏ｳｻ縺ｫ螟画鋤
                 ),
                 Area = (float)stats.get(i, Imgproc.CC_STAT_AREA)[0],
                 Color = Color.white,

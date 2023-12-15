@@ -32,7 +32,7 @@ class ProcessImageArgs
 [RequireComponent(typeof(ARFoundationCameraToMatHelper))]
 public class CameraImageProcessor : MonoBehaviour
 {
-    //------GetComponent‚©‚ç‰Šú‰»------
+    //------GetComponentã‹ã‚‰åˆæœŸåŒ–------
 
     LampDetectionHelper m_lampHelper;
 
@@ -40,34 +40,34 @@ public class CameraImageProcessor : MonoBehaviour
 
     ARFoundationCameraToMatHelper m_cameraTextureToMatHelper;
 
-    //------ƒGƒfƒBƒ^‚Åİ’è------
+    //------ã‚¨ãƒ‡ã‚£ã‚¿ã§è¨­å®š------
 
     [SerializeField]
     RaycastMask m_raycastMask;
 
-    //------ƒvƒƒpƒeƒB------
+    //------ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£------
 
     /// <summary>
-    /// ƒ‰ƒ“ƒv‚ğ”z’u‚·‚é‹——£
+    /// ãƒ©ãƒ³ãƒ—ã‚’é…ç½®ã™ã‚‹è·é›¢
     /// </summary>
     public float LampDistance = 5.0f;
 
     //------
 
     /// <summary>
-    /// ParticleSystem.SetParticles‚É‘—‚é‘O‚Ìƒp[ƒeƒBƒNƒ‹
-    /// Alloc‰ñ”íŒ¸‚Ì‚½‚ßÄ—˜—p
+    /// ParticleSystem.SetParticlesã«é€ã‚‹å‰ã®ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+    /// Allocå›æ•°å‰Šæ¸›ã®ãŸã‚å†åˆ©ç”¨
     /// </summary>
     List<ParticleSystem.Particle> m_newParticleBuffer = new List<ParticleSystem.Particle>();
 
     /// <summary>
-    /// KDTree.Build‚É‘—‚é‘O‚ÌÀ•W
-    /// Alloc‰ñ”íŒ¸‚Ì‚½‚ßÄ—˜—p
+    /// KDTree.Buildã«é€ã‚‹å‰ã®åº§æ¨™
+    /// Allocå›æ•°å‰Šæ¸›ã®ãŸã‚å†åˆ©ç”¨
     /// </summary>
     List<Vector3> m_newKdNodes = new List<Vector3>();
 
     /// <summary>
-    /// ƒCƒ‹ƒ~ƒl[ƒVƒ‡ƒ“‚Ìƒ‰ƒ“ƒv‚ÌˆÊ’u‚ğ•Û‘¶‚·‚éKD–Ø
+    /// ã‚¤ãƒ«ãƒŸãƒãƒ¼ã‚·ãƒ§ãƒ³ã®ãƒ©ãƒ³ãƒ—ã®ä½ç½®ã‚’ä¿å­˜ã™ã‚‹KDæœ¨
     /// </summary>
     KDTree m_lampKdTree = new KDTree();
 
@@ -104,10 +104,10 @@ public class CameraImageProcessor : MonoBehaviour
 
     void TakeSnapshot(Mat image)
     {
-        // ARCameraManager‚©‚çƒJƒƒ‰‚ğæ“¾
+        // ARCameraManagerã‹ã‚‰ã‚«ãƒ¡ãƒ©ã‚’å–å¾—
         var camera = m_cameraTextureToMatHelper.GetARCameraManager().GetComponent<Camera>();
 
-        // ‰æ‘œ‚©‚çƒ‰ƒ“ƒvˆÊ’u‚ğŒŸo
+        // ç”»åƒã‹ã‚‰ãƒ©ãƒ³ãƒ—ä½ç½®ã‚’æ¤œå‡º
         var lamps = m_lampHelper.Run(image);
 
         m_newParticleBuffer.Clear();
@@ -119,13 +119,13 @@ public class CameraImageProcessor : MonoBehaviour
 
             if (Physics.Raycast(rayFromCamera, LampDistance, m_raycastMask.RaycastMaskLayer))
             {
-                // ƒ}ƒXƒN‚ÉÕ“Ë‚µ‚½‚çƒXƒLƒbƒv
+                // ãƒã‚¹ã‚¯ã«è¡çªã—ãŸã‚‰ã‚¹ã‚­ãƒƒãƒ—
                 continue;
             }
 
             var lampWorldPos = rayFromCamera.GetPoint(LampDistance);
 
-            // ƒp[ƒeƒBƒNƒ‹‚ğ’Ç‰Á
+            // ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã‚’è¿½åŠ 
             m_newParticleBuffer.Add(new ParticleSystem.Particle
             {
                 startColor = lamp.Color,
@@ -134,24 +134,24 @@ public class CameraImageProcessor : MonoBehaviour
                 remainingLifetime = float.PositiveInfinity
             });
 
-            // KD–Ø‚ÉÀ•W‚ğ’Ç‰Á
+            // KDæœ¨ã«åº§æ¨™ã‚’è¿½åŠ 
             m_newKdNodes.Add(lampWorldPos);
         }
 
-        // ƒoƒbƒtƒ@‚ğParticleSystem‚Ì––”ö‚É‘}“ü
+        // ãƒãƒƒãƒ•ã‚¡ã‚’ParticleSystemã®æœ«å°¾ã«æŒ¿å…¥
         m_particleSystem.SetParticles(
             m_newParticleBuffer.ToArray(), 
             size: m_newParticleBuffer.Count, 
             offset: m_particleSystem.particleCount
         );
 
-        // KD–Ø‚ğÄ\’z
+        // KDæœ¨ã‚’å†æ§‹ç¯‰
         m_lampKdTree.Build(m_newKdNodes);
 
-        // ƒp[ƒeƒBƒNƒ‹‚ÆKD–Ø‚Ìƒm[ƒh‚ÌƒCƒ“ƒfƒbƒNƒX‚Í˜A“®‚µ‚Ä‚¢‚é•K—v‚ª‚ ‚é‚Ì‚Å”O‚Ì‚½‚ß
+        // ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã¨KDæœ¨ã®ãƒãƒ¼ãƒ‰ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¯é€£å‹•ã—ã¦ã„ã‚‹å¿…è¦ãŒã‚ã‚‹ã®ã§å¿µã®ãŸã‚
         Debug.Assert(m_particleSystem.particleCount == m_lampKdTree.Count);
 
-        // ÅŒã‚Éƒ}ƒXƒN‚ğ’Ç‰Á
+        // æœ€å¾Œã«ãƒã‚¹ã‚¯ã‚’è¿½åŠ 
         m_raycastMask.AppendMask(camera);
     }
 
@@ -166,8 +166,8 @@ public class CameraImageProcessor : MonoBehaviour
         var cameraForwardRay = new Ray(cameraManager.transform.position, cameraManager.transform.forward);
         if (!Physics.Raycast(cameraForwardRay, LampDistance, m_raycastMask.RaycastMaskLayer))
         {
-            // Œü‚¢‚Ä‚¢‚é•ûŒü‚ªƒ}ƒXƒN‚Ì”ÍˆÍŠO
-            // ¨‚Ü‚¾B‰e‚µ‚Ä‚¢‚È‚¢‚Ì‚ÅB‰e
+            // å‘ã„ã¦ã„ã‚‹æ–¹å‘ãŒãƒã‚¹ã‚¯ã®ç¯„å›²å¤–
+            // â†’ã¾ã æ’®å½±ã—ã¦ã„ãªã„ã®ã§æ’®å½±
 
             TakeSnapshot(image);
         }

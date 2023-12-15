@@ -3,13 +3,13 @@ using UnityEngine;
 public class RaycastMask : MonoBehaviour
 {
     /// <summary>
-    /// ƒ}ƒXƒN‚Ì’†S‚©‚ç‚Ì‹——£
+    /// ãƒã‚¹ã‚¯ã®ä¸­å¿ƒã‹ã‚‰ã®è·é›¢
     /// </summary>
     [Range(0.1f, 5f)]
     public float Distance = 1;
 
     /// <summary>
-    /// RaycastMask‚ÌƒŒƒCƒ„[
+    /// RaycastMaskã®ãƒ¬ã‚¤ãƒ¤ãƒ¼
     /// </summary>
     public int RaycastMaskLayer = 7;
 
@@ -18,20 +18,20 @@ public class RaycastMask : MonoBehaviour
 
     public void AppendMask(Camera camera)
     {
-        // ƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬
+        // ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆ
         var maskObject = Instantiate(m_colliderPrefab, transform);
         var colliderTransform = maskObject.transform.GetChild(0).transform;
 
-        // QlFƒJƒƒ‰‚©‚ç‚Ì‹——£‚Å‹‚ß‚é‘ä‚ÌƒTƒCƒY (Unityƒ}ƒjƒ…ƒAƒ‹)
+        // å‚è€ƒï¼šã‚«ãƒ¡ãƒ©ã‹ã‚‰ã®è·é›¢ã§æ±‚ã‚ã‚‹éŒå°ã®ã‚µã‚¤ã‚º (Unityãƒãƒ‹ãƒ¥ã‚¢ãƒ«)
         // https://docs.unity3d.com/ja/current/Manual/FrustumSizeAtDistance.html
         var frustumHalfHeight = Distance * Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
         var frustumHalfWidth = frustumHalfHeight * camera.aspect;
 
-        // ‰ñ“]‚ğİ’è
+        // å›è»¢ã‚’è¨­å®š
         maskObject.transform.position = camera.transform.position;
         maskObject.transform.localRotation = camera.transform.localRotation;
 
-        // ƒ}ƒXƒN‚Ì‹——£AƒTƒCƒY‚ğİ’è
+        // ãƒã‚¹ã‚¯ã®è·é›¢ã€ã‚µã‚¤ã‚ºã‚’è¨­å®š
         colliderTransform.localPosition = new Vector3(0, 0, Distance);
         colliderTransform.localScale = new Vector3(frustumHalfWidth, frustumHalfHeight, 1);
     }
