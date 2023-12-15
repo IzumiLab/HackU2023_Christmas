@@ -25,7 +25,7 @@ public class RaycastMask : MonoBehaviour
         // 参考：カメラからの距離で求める錐台のサイズ (Unityマニュアル)
         // https://docs.unity3d.com/ja/current/Manual/FrustumSizeAtDistance.html
         var frustumHeight = 2 * Distance * Mathf.Tan(camera.fieldOfView * 0.5f * Mathf.Deg2Rad);
-        var frustumWidth = 2 * frustumHeight * camera.aspect;
+        var frustumWidth = frustumHeight * camera.aspect;
 
         // 回転を設定
         maskObject.transform.position = camera.transform.position;
