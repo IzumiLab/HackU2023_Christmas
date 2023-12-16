@@ -46,6 +46,7 @@ public class LampDetectionHelper : MonoBehaviour
 
     public DetectedLampInfo[] Run(Mat rgb24Image)
     {
+
         Imgproc.cvtColor(rgb24Image, m_grayscaledMat, Imgproc.COLOR_RGB2GRAY);
         Imgproc.GaussianBlur(m_grayscaledMat, m_burredMat, new(11, 11), 0);
         Imgproc.threshold(m_burredMat, m_illuminationMask, ValueThreshold, 255, Imgproc.THRESH_BINARY);
@@ -82,12 +83,26 @@ public class LampDetectionHelper : MonoBehaviour
                     rgb24Image.height() - (float)centroids.get(i, 1)[0] // Unityの座標系に変換
                 ),
                 Area = (float)stats.get(i, Imgproc.CC_STAT_AREA)[0],
-                Color = Color.white,
+                Color = GetColorAtCoordinate(rgb24Image, (int)centroids.get(i, 0)[0], (int)centroids.get(i, 1)[0])
             })
             .ToArray();
 
         return lamps;
     }
+
+    private Color GetColorAtCoordinate(Mat image, int x, int y)
+    {
+        x = Mathf.Clamp(x, 0, image.width() - 1);
+        y = Mathf.Clamp(y, 0, image.height() - 1);
+
+        double[] colorValues = image.get(y, x);
+
+        Color color = new Color((float)colorValues[0] / 255f, (float)colorValues[1] / 255f, (float)colorValues[2] / 255f);
+
+        return color;
+    }
+
+
     void OnDestroy()
     {
         DisposeWhenNonNull(m_grayscaledMat);
