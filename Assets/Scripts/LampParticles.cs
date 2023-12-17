@@ -1,23 +1,11 @@
 using System;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
-using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using OpenCVForUnity.CoreModule;
-using OpenCVForUnity.ImgprocModule;
-using UnityEngine.UI;
-using OpenCVForUnity.UnityUtils;
 using ARFoundationWithOpenCVForUnity.UnityUtils.Helper;
 using OpenCVForUnity.UnityUtils.Helper;
-using OpenCVForUnity.ArucoModule;
-using OpenCVForUnity.ObjdetectModule;
-using OpenCVForUnity.Calib3dModule;
-using Unity.Mathematics;
-using Unity.Collections;
 using DataStructures.ViliWonka.KDTree;
-using UnityEngine.UIElements;
 
 class ProcessImageArgs
 {
@@ -30,7 +18,7 @@ class ProcessImageArgs
 
 [RequireComponent(typeof(LampDetectionHelper))]
 [RequireComponent(typeof(ARFoundationCameraToMatHelper))]
-public class CameraImageProcessor : MonoBehaviour
+public class LampParticles : MonoBehaviour
 {
     //------GetComponentから初期化------
 
