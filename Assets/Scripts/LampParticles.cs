@@ -5,15 +5,19 @@ using System.Collections.Generic;
 using OpenCVForUnity.CoreModule;
 using ARFoundationWithOpenCVForUnity.UnityUtils.Helper;
 using OpenCVForUnity.UnityUtils.Helper;
+using System.Linq;
+using System.Buffers;
 using DataStructures.ViliWonka.KDTree;
 
-class ProcessImageArgs
+public struct Lamp
 {
-    public Mat Image;
+    public Vector3 Position;
 
-    public Matrix4x4 ProjectionMatrix;
+    public float Area;
 
-    public Matrix4x4 CameraToWorldMatrix;
+    public Color Color;
+
+    public bool Removed;
 }
 
 [RequireComponent(typeof(LampDetectionHelper))]
@@ -46,12 +50,22 @@ public class LampParticles : MonoBehaviour
     /// ParticleSystem.SetParticlesに送る前のパーティクル
     /// Alloc回数削減のため再利用
     /// </summary>
-    List<ParticleSystem.Particle> m_newParticleBuffer = new List<ParticleSystem.Particle>();
+    static ParticleSystem.Particle[] m_newParticleBuffer = new ParticleSystem.Particle[0];
 
     /// <summary>
-    /// イルミネーションのランプの位置を保存するKD木
+    /// ランプの状態
+    /// </summary>
+    static List<Lamp> m_lamps = new List<Lamp>();
+
+    /// <summary>
+    /// イルミネーションのランプを保存するKD木
     /// </summary>
     KDTree m_lampKdTree = new KDTree();
+
+    /// <summary>
+    /// 検索時に使うクエリ
+    /// </summary>
+    KDQuery m_lampKdQuery;
 
     void Start()
     {
@@ -67,6 +81,67 @@ public class LampParticles : MonoBehaviour
     {
         m_cameraTextureToMatHelper.frameMatAcquired -= OnFrameMatAcquired;
         m_cameraTextureToMatHelper.Dispose();
+    }
+
+    int m_particleCount = -1;
+
+    private void Update()
+    {
+        if (m_particleSystem.particleCount != m_particleCount)
+        {
+            m_particleCount = m_particleSystem.particleCount;
+            Debug.Log(m_particleCount);
+        }
+    }
+
+    public void OnDrawGizmosSelected()
+    {
+        if (m_lampKdQuery != null)
+        {
+            m_lampKdQuery.DrawLastQuery();
+        }
+    }
+
+    public Camera GetCamera()
+    {
+        // ARCameraManagerからカメラを取得
+        return m_cameraTextureToMatHelper.GetARCameraManager().GetComponent<Camera>();
+    }
+
+    public Lamp[] RemoveLamp(Vector2 screenPos, float radius)
+    {
+        var camera = GetCamera();
+
+        // KD木を検索
+        var queryCenter = camera.ScreenPointToRay(screenPos).GetPoint(LampDistance);
+        
+        List<int> lampIndicies = new List<int>();
+        m_lampKdQuery ??= new KDQuery();
+        m_lampKdQuery.Radius(m_lampKdTree, queryCenter, radius, lampIndicies);
+
+        // 削除されたランプは無視
+        lampIndicies.RemoveAll(i => m_lamps[i].Removed);
+
+        // すでに検索結果が空の場合は空配列を返す
+        if (lampIndicies.Count == 0)
+        {
+            return new Lamp[0];
+        }
+
+        // ノードの論理削除
+        foreach (var index in lampIndicies)
+        {
+            Lamp lamp = m_lamps[index];
+            lamp.Removed = true;
+            m_lamps[index] = lamp;
+        }
+
+        // パーティクルを再構築
+        // TODO: より効率の良いパーティクル削除を模索
+
+        m_particleSystem.SetParticles(m_lamps.Where(lamp => !lamp.Removed).Select(lamp => CreateParticle(lamp)).ToArray());
+
+        return lampIndicies.Select(i => m_lamps[i]).ToArray();
     }
 
     public void OnWebCamTextureToMatHelperInitialized()
@@ -86,62 +161,70 @@ public class LampParticles : MonoBehaviour
 
     void TakeSnapshot(Mat image)
     {
-        // ARCameraManagerからカメラを取得
-        var camera = m_cameraTextureToMatHelper.GetARCameraManager().GetComponent<Camera>();
+        var camera = GetCamera();
 
         // 画像からランプ位置を検出
-        var lamps = m_lampHelper.Run(image);
+        var detectedLamps = m_lampHelper.Run(image);
 
-        m_newParticleBuffer.Clear();
-
-        foreach (var lamp in lamps)
+        // 必要に応じてバッファの大きさを変更
+        if (detectedLamps.Length > m_newParticleBuffer.Length)
         {
-            Ray rayFromCamera = camera.ScreenPointToRay(lamp.Position);
+            Array.Resize(ref m_newParticleBuffer, detectedLamps.Length);
+        }
 
+        var newLampBegin = m_lamps.Count;
+        var newLampCount = 0;
+        foreach (var lampInfo in detectedLamps)
+        {
+            Ray rayFromCamera = camera.ScreenPointToRay(lampInfo.Position);
+
+            // マスクに衝突したらスキップ
             if (Physics.Raycast(rayFromCamera, LampDistance, m_raycastMask.RaycastMaskLayer))
             {
-                // マスクに衝突したらスキップ
                 continue;
             }
 
             var lampWorldPos = rayFromCamera.GetPoint(LampDistance);
-
-            // パーティクルを追加
-            m_newParticleBuffer.Add(new ParticleSystem.Particle
+            
+            var lamp = new Lamp
             {
-                startColor = lamp.Color,
-                startSize = Math.Min(lamp.Area * 0.1f, 0.5f),
-                position = lampWorldPos,
-                remainingLifetime = float.PositiveInfinity
-            });
+                Position = lampWorldPos,
+                Area = lampInfo.Area,
+                Color = lampInfo.Color,
+                Removed = false,
+            };
+
+            // m_lampsとm_newParticleBufferに反映
+            m_lamps.Add(lamp);
+            m_newParticleBuffer[newLampCount] = CreateParticle(lamp);
+
+            newLampCount++;
         }
 
-        // バッファをParticleSystemの末尾に挿入
-        m_particleSystem.SetParticles(
-            m_newParticleBuffer.ToArray(), 
-            size: m_newParticleBuffer.Count, 
-            offset: m_particleSystem.particleCount
-        );
-
-        // KD木を再構築
-        var kdTreeBegin = m_lampKdTree.Count;
-        m_lampKdTree.SetCount(m_lampKdTree.Count + m_newParticleBuffer.Count);
-        for (int i = 0; i < m_newParticleBuffer.Count; i++)
+        // m_lampsを利用してKD木の更新
+        m_lampKdTree.SetCount(m_lamps.Count);
+        foreach (var lampIdx in Enumerable.Range(newLampBegin, newLampCount))
         {
-            m_lampKdTree.Points[kdTreeBegin + i] = m_newParticleBuffer[i].position;
+            m_lampKdTree.Points[lampIdx] = m_lamps[lampIdx].Position;
         }
         m_lampKdTree.Rebuild();
 
+        // バッファをParticleSystemの末尾に挿入
+        m_particleSystem.SetParticles(
+            m_newParticleBuffer,
+            size: newLampCount,
+            offset: m_particleSystem.particleCount
+        );
 
         // 最後にマスクを追加
-        m_raycastMask.AppendMask(camera);
+        m_raycastMask.CreateMask(camera);
     }
 
     void OnFrameMatAcquired(
-        Mat image, 
-        Matrix4x4 projectionMatrix, 
-        Matrix4x4 cameraToWorldMatrix, 
-        XRCameraIntrinsics cameraIntrinsics, 
+        Mat image,
+        Matrix4x4 projectionMatrix,
+        Matrix4x4 cameraToWorldMatrix,
+        XRCameraIntrinsics cameraIntrinsics,
         long timestamp)
     {
         var cameraManager = m_cameraTextureToMatHelper.GetARCameraManager();
@@ -154,4 +237,11 @@ public class LampParticles : MonoBehaviour
             TakeSnapshot(image);
         }
     }
+
+    static ParticleSystem.Particle CreateParticle(Lamp lamp) => new ParticleSystem.Particle
+    {
+        startColor = lamp.Color,
+        startSize = Math.Min(lamp.Area * 0.1f, 0.5f),
+        position = lamp.Position,
+    };
 }

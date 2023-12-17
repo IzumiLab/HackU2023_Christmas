@@ -16,7 +16,7 @@ public class RaycastMask : MonoBehaviour
     [SerializeField]
     private GameObject m_colliderPrefab;
 
-    public void AppendMask(Camera camera)
+    public void CreateMask(Camera camera)
     {
         // インスタンスを作成
         var maskObject = Instantiate(m_colliderPrefab, transform);
