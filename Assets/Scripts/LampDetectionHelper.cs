@@ -75,11 +75,14 @@ public class LampDetectionHelper : MonoBehaviour
             UpdateDebugImage(internalImg).Forget();
         }
 
+        var thresholdArea = 12; // 閾値となる面積
+
         var lamps = Enumerable.Range(1, count - 1)
+            .Where(i => (float)stats.get(i, Imgproc.CC_STAT_AREA)[0] < thresholdArea) // 面積が閾値より大きいものだけを選択
             .Select(i => new DetectedLampInfo
             {
                 Position = new(
-                    (float)centroids.get(i, 0)[0], 
+                    (float)centroids.get(i, 0)[0],
                     rgb24Image.height() - (float)centroids.get(i, 1)[0] // Unityの座標系に変換
                 ),
                 Area = (float)stats.get(i, Imgproc.CC_STAT_AREA)[0],
