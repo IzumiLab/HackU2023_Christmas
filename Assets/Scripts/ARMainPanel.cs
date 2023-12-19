@@ -16,6 +16,9 @@ public class ARMainPanel : MonoBehaviour, IDragHandler
     public float LampSpawnRadius = 50;
 
     [SerializeField]
+    RectTransform m_movingLampField;
+
+    [SerializeField]
     MovingLamp m_movingLampPrefab;
 
     [SerializeField]
@@ -23,6 +26,11 @@ public class ARMainPanel : MonoBehaviour, IDragHandler
 
     [SerializeField]
     LampParticles m_particles;
+
+    [SerializeField]
+    Fukidashi m_lampCountingFukidashi;
+
+    int m_newLampCount = 0;
 
     public void Start()
     {
@@ -37,11 +45,16 @@ public class ARMainPanel : MonoBehaviour, IDragHandler
 
             if (removedLamps.Length > 0)
             {
+                // 吹き出し表示
+                m_newLampCount += removedLamps.Length;
+                m_lampCountingFukidashi.Text = $"+{m_newLampCount}";
+                m_lampCountingFukidashi.Show();
+
                 // ランプ回収アニメーション
                 var delayMax = removedLamps.Length / LampCountPerSecond;
                 foreach (var lamp in removedLamps)
                 {
-                    var movingLamp = Instantiate(m_movingLampPrefab, transform.parent);
+                    var movingLamp = Instantiate(m_movingLampPrefab, m_movingLampField.transform);
                     movingLamp.Initialise(
                         startPosition: data.position + Random.insideUnitCircle * LampSpawnRadius,
                         target: m_lampCollectionTarget,
