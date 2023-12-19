@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
+  m_IndirectSpecularColor: {r: 0.3708984, g: 0.37837017, b: 0.35722524, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -600,6 +600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4877ad3547285984e91fa35c0a8932ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LampCountPerSecond: 20
   m_movingLampPrefab: {fileID: 4332512959789811441, guid: 4d969e2171c3d124aa9cbdc337f6aae3, type: 3}
   m_collectAnimationTarget: {fileID: 1266325992}
   m_particles: {fileID: 2031563452}

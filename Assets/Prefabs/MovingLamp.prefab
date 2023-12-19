@@ -88,5 +88,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8716da6fdfd946547ae73f783627f450, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Duration: 0.4
-  TargetPos: {x: 0, y: 0}
+  MoveDuration: 0.3
+  FadeInDuration: 0.02
