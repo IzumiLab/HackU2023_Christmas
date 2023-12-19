@@ -177,9 +177,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6544619729432829275}
-        m_TargetAssemblyTypeName: MoveScene, Assembly-CSharp
-        m_MethodName: ButtonClick
+      - m_Target: {fileID: 7379477628752727551}
+        m_TargetAssemblyTypeName: ToTree, Assembly-CSharp
+        m_MethodName: ButtonClick_toTree
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
