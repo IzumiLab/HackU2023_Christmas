@@ -19,7 +19,7 @@ public class ARMainPanel : MonoBehaviour, IDragHandler
     MovingLamp m_movingLampPrefab;
 
     [SerializeField]
-    RectTransform m_collectAnimationTarget;
+    LampCollectionTarget m_lampCollectionTarget;
 
     [SerializeField]
     LampParticles m_particles;
@@ -35,7 +35,7 @@ public class ARMainPanel : MonoBehaviour, IDragHandler
                 var movingLamp = Instantiate(m_movingLampPrefab, transform.parent);
                 movingLamp.Initialise(
                     startPosition: data.position + Random.insideUnitCircle * LampSpawnRadius,
-                    target: m_collectAnimationTarget,
+                    target: m_lampCollectionTarget,
                     delay: Random.Range(0, delayMax),
                     lamp: lamp
                 );

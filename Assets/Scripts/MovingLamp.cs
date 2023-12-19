@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UIElements.Experimental;
@@ -10,13 +8,13 @@ public class MovingLamp : MonoBehaviour
 
     public float FadeInDuration = 0.02f;
 
+    LampCollectionTarget m_target;
+
     RectTransform m_rectTransform;
 
     Image m_image;
 
     Vector2 m_startPos;
-
-    Vector2 m_targetPos;
 
     float m_time;
 
@@ -49,6 +47,7 @@ public class MovingLamp : MonoBehaviour
         }
         else
         {
+            m_target.StartAnimation();
             Destroy(gameObject);
             return;
         }
@@ -57,13 +56,13 @@ public class MovingLamp : MonoBehaviour
         color.a = alphaT;
         m_image.color = color;
 
-        m_rectTransform.anchoredPosition = Vector2.Lerp(m_startPos, m_targetPos, posT);
+        m_rectTransform.anchoredPosition = Vector2.Lerp(m_startPos, m_target.rectTransform.position, posT);
     }
 
-    public void Initialise(Vector2 startPosition, RectTransform target, float delay, Lamp lamp)
+    public void Initialise(Vector2 startPosition, LampCollectionTarget target, float delay, Lamp lamp)
     {
         m_startPos = startPosition;
-        m_targetPos = target.position;
+        m_target = target;
         m_time = -Mathf.Max(delay, 0);
 
         m_image.color = new Color(

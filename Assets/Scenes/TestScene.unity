@@ -383,6 +383,7 @@ GameObject:
   - component: {fileID: 1266325992}
   - component: {fileID: 1266325994}
   - component: {fileID: 1266325993}
+  - component: {fileID: 1266325995}
   m_Layer: 5
   m_Name: LampCollectionTarget
   m_TagString: Untagged
@@ -447,6 +448,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1266325991}
   m_CullTransparentMesh: 1
+--- !u!114 &1266325995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1266325991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be2dcab382728cc41a0ac3ed99006da6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxScale: 1.2
+  ScaleUpSpeed: 0.1
+  ScaleDownSpeed: 0.14
 --- !u!1 &1295333319
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,8 +617,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LampCountPerSecond: 20
+  LampSpawnRadius: 50
   m_movingLampPrefab: {fileID: 4332512959789811441, guid: 4d969e2171c3d124aa9cbdc337f6aae3, type: 3}
-  m_collectAnimationTarget: {fileID: 1266325992}
+  m_lampCollectionTarget: {fileID: 1266325995}
   m_particles: {fileID: 2031563452}
 --- !u!114 &1302051925
 MonoBehaviour:
