@@ -15,7 +15,7 @@ public struct Lamp
 
     public float Area;
 
-    public Color Color;
+    public Color32 Color;
 
     public bool Removed;
 }
@@ -43,6 +43,17 @@ public class LampParticles : MonoBehaviour
     /// ランプを配置する距離
     /// </summary>
     public float LampDistance = 5.0f;
+
+    /// <summary>
+    /// 減色した後の色の数
+    /// </summary>
+    public int AmountOfColor = 8;
+
+    /// <summary>
+    /// ランプの彩度
+    /// </summary>
+    [Range(0.0f, 1.0f)]
+    public float LampSaturation = 0.2f;
 
     //------
 
@@ -185,12 +196,16 @@ public class LampParticles : MonoBehaviour
             }
 
             var lampWorldPos = rayFromCamera.GetPoint(LampDistance);
+
+            Color.RGBToHSV(lampInfo.Color, out float hue, out _, out _);
+            // n色に減色
+            hue = Mathf.Round(hue * AmountOfColor) / AmountOfColor;
             
             var lamp = new Lamp
             {
                 Position = lampWorldPos,
                 Area = lampInfo.Area,
-                Color = lampInfo.Color,
+                Color = Color.HSVToRGB(hue, LampSaturation, 1),
                 Removed = false,
             };
 

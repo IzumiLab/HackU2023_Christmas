@@ -65,10 +65,11 @@ public class MovingLamp : MonoBehaviour
         m_target = target;
         m_time = -Mathf.Max(delay, 0);
 
+        Color floatColor = lamp.Color;
         m_image.color = new Color(
-            lamp.Color.r, 
-            lamp.Color.g, 
-            lamp.Color.b, 
+            floatColor.r,
+            floatColor.g, 
+            floatColor.b, 
             a: delay <= 0.0f ? 1.0f : 0.0f
         );
         m_rectTransform.anchoredPosition = startPosition;
