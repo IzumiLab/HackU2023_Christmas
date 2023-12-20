@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.31796336, g: 0.342507, b: 0.38209435, a: 1}
+  m_IndirectSpecularColor: {r: 0.313409, g: 0.3391756, b: 0.3817359, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -229,6 +229,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 2487102493071987144, guid: c8e2aae353286b7449097aff7e899bf6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 254676209}
+    - target: {fileID: 2487102493071987144, guid: c8e2aae353286b7449097aff7e899bf6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ButtonClick_toTestScene
+      objectReference: {fileID: 0}
+    - target: {fileID: 2487102493071987144, guid: c8e2aae353286b7449097aff7e899bf6, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ToTestScene, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3333297252552531375, guid: c8e2aae353286b7449097aff7e899bf6, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4f7dbe79698c58d48b4cc43cc47fb8e3, type: 3}
     - target: {fileID: 4503171173422547774, guid: c8e2aae353286b7449097aff7e899bf6, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -319,6 +335,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4503171173422547774, guid: c8e2aae353286b7449097aff7e899bf6, type: 3}
   m_PrefabInstance: {fileID: 254676207}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &254676209 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6544619729432829275, guid: c8e2aae353286b7449097aff7e899bf6, type: 3}
+  m_PrefabInstance: {fileID: 254676207}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be4f974b5daf74747b708cf7ca448264, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &695003999
 GameObject:
   m_ObjectHideFlags: 0
