@@ -14,6 +14,9 @@ public class SaveData : ISerializationCallbackReceiver
     public Dictionary<Color32, int> CollectedLampCount { get; set; } = new Dictionary<Color32, int>();
 
     [SerializeField]
+    public DecoratedTreeData MyTree = new DecoratedTreeData();
+
+    [SerializeField]
     private List<Color32> CollectedColors;
 
     [SerializeField]
@@ -117,7 +120,6 @@ public class SaveManager : MonoBehaviour
             ForceSave();
         }
     }
-
 
     public bool Load()
     {

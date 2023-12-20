@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5503187473587259361}
   - component: {fileID: 5970286521873925313}
   - component: {fileID: 1913263606175348963}
+  - component: {fileID: 8291767388303453860}
   m_Layer: 0
   m_Name: SnowfallDecoration
   m_TagString: Untagged
@@ -57,7 +58,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 3
-    scalar: 3
+    scalar: 1
     minScalar: 0
     maxCurve:
       serializedVersion: 2
@@ -4831,6 +4832,24 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &8291767388303453860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3539706839736600424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e15bb7227cb95b94f8b039275b1ab94e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Snowfall
+  LargeImage: {fileID: 0}
+  SmallImage: {fileID: 0}
+  SetColorCallback:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &6927062828674801976
 GameObject:
   m_ObjectHideFlags: 0
