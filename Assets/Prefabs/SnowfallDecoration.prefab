@@ -4844,12 +4844,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e15bb7227cb95b94f8b039275b1ab94e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Snowfall
-  LargeImage: {fileID: 0}
-  SmallImage: {fileID: 0}
-  SetColorCallback:
+  m_name: Snowfall
+  m_largeImage: {fileID: 0}
+  m_smallImage: {fileID: 0}
+  m_cost: 0
+  m_setColorCallback:
     m_PersistentCalls:
       m_Calls: []
+  Data:
+    TypeName: 
+    LocalPosition: {x: 0, y: 0, z: 0}
+    LocalRotation: {x: 0, y: 0, z: 0, w: 0}
+    Color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &6927062828674801976
 GameObject:
   m_ObjectHideFlags: 0

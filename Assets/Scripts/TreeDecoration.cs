@@ -16,6 +16,9 @@ public class TreeDecoration : MonoBehaviour
     private Sprite m_smallImage;
 
     [SerializeField]
+    private int m_cost;
+
+    [SerializeField]
     private UnityEvent<Color> m_setColorCallback;
 
     public string TypeName { get => m_name; }
@@ -23,6 +26,8 @@ public class TreeDecoration : MonoBehaviour
     public Sprite TypeLargeImage { get => m_largeImage; }
 
     public Sprite TypeSmallImage { get => m_smallImage; }
+
+    public int TypeCost { get => m_cost; }
 
     public TreeDecorationData Data;
 
