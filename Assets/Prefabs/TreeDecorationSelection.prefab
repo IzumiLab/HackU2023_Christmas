@@ -126,7 +126,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1602816272583400316}
+        m_TargetAssemblyTypeName: TreeDecorationSelection, Assembly-CSharp
+        m_MethodName: OnValueChanged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 0
 --- !u!114 &1602816272583400316
 MonoBehaviour:
@@ -143,7 +155,6 @@ MonoBehaviour:
   CanPurchase: 1
   Data: {fileID: 0}
   m_disabledCostLabelColor: {r: 0.8679245, g: 0.3234247, b: 0.3234247, a: 1}
-  m_toggle: {fileID: 1384250866291955972}
   m_image: {fileID: 8901855100052146026}
   m_nameLabel: {fileID: 8080953260051755632}
   m_costLabel: {fileID: 906208681960013743}

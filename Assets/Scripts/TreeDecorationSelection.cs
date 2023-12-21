@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -5,17 +6,19 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Toggle))]
 public class TreeDecorationSelection : MonoBehaviour
 {
     public bool CanPurchase = true;
 
     public TreeDecoration Data;
 
-    [SerializeField]
-    private Color m_disabledCostLabelColor;
+    public Action<bool, TreeDecoration> OnValueChangedCallback;
+
+    private Toggle m_toggle;
 
     [SerializeField]
-    private Toggle m_toggle;
+    private Color m_disabledCostLabelColor;
 
     [SerializeField]
     private Image m_image;
@@ -25,6 +28,11 @@ public class TreeDecorationSelection : MonoBehaviour
 
     [SerializeField]
     private TextMeshProUGUI m_costLabel;
+
+    void Awake()
+    {
+        m_toggle = GetComponent<Toggle>();
+    }
 
     public void Build(ToggleGroup group)
     {
@@ -38,5 +46,10 @@ public class TreeDecorationSelection : MonoBehaviour
             m_nameLabel.text = Data.TypeName;
             m_costLabel.text = Data.TypeCost.ToString();
         }
+    }
+
+    public void OnValueChanged(bool state)
+    {
+        OnValueChangedCallback?.Invoke(state, Data);
     }
 }

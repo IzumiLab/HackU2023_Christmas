@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TreeEditorUI : MonoBehaviour
 {
+    private DecoratedTree m_tree;
+
+    [SerializeField]
+    private Button m_finishButton;
+
     [SerializeField]
     private VerticalLayoutGroup m_header;
 
@@ -28,9 +34,14 @@ public class TreeEditorUI : MonoBehaviour
     [SerializeField]
     private TreeDecorationDictionary m_decorationDic;
 
-    private Color32? m_selectedColor;
+    public Color32 SelectedColor { get; private set; }
 
-    private string m_selectedDecoration = null;
+    public TreeDecoration SelectedDecoration { get; private set; }
+
+    void Awake()
+    {
+        m_tree = FindAnyObjectByType<DecoratedTree>();
+    }
 
     public void BuildAll()
     {
@@ -51,6 +62,7 @@ public class TreeEditorUI : MonoBehaviour
             var selection = Instantiate(m_colorSelectionPrefab, m_colorSelectionGroup.transform);
             selection.Color = color32;
             selection.Count = count;
+            selection.OnValueChangedCallback = OnColorChanged;
             selection.Build(m_colorSelectionGroup);
         }
     }
@@ -67,8 +79,47 @@ public class TreeEditorUI : MonoBehaviour
             var selection = Instantiate(m_decorationSelectionPrefab, m_decorationSelectionGroup.transform);
             selection.Data = decoration;
             selection.CanPurchase = true;
+            selection.OnValueChangedCallback = OnDecorationChanged;
             selection.Build(m_decorationSelectionGroup);
         }
+    }
+
+    void OnColorChanged(bool state, Color32 color)
+    {
+        if (state)
+        {
+            SelectedColor = color;
+        }
+    }
+
+    void OnDecorationChanged(bool state, TreeDecoration decoration)
+    {
+        if (state)
+        {
+            SelectedDecoration = decoration;
+        }
+        else if (SelectedDecoration == decoration)
+        {
+            SelectedDecoration = null;
+        }
+    }
+
+    public void OnCancelButtonClicked()
+    {
+        SceneManager.LoadScene("Tree");
+    }
+
+    public void OnFinishButtonClicked()
+    {
+        SaveManager.Instance.SaveData.MyTree = m_tree.Data;
+        SaveManager.Instance.ForceSave();
+
+        SceneManager.LoadScene("Tree");
+    }
+
+    public void MarkDirty()
+    {
+        m_finishButton.interactable = true;
     }
 
     void Start()

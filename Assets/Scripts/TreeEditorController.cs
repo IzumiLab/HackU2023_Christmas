@@ -6,27 +6,15 @@ using UnityEngine.UI;
 
 public class TreeEditorController : MonoBehaviour
 {
-    [SerializeField]
     private DecoratedTree m_tree;
 
-    [SerializeField]
-    private Button m_finishButton;
+    private void Awake()
+    {
+        m_tree = FindAnyObjectByType<DecoratedTree>();
+    }
 
     void Update()
     {
         m_tree.LoadData(SaveManager.Instance.SaveData.MyTree);
-    }
-
-    public void OnCancelButtonClicked()
-    {
-        SceneManager.LoadScene("Tree");
-    }
-
-    public void OnFinishButtonClicked()
-    {
-        SaveManager.Instance.SaveData.MyTree = m_tree.Data;
-        SaveManager.Instance.ForceSave();
-
-        SceneManager.LoadScene("Tree");
     }
 }
