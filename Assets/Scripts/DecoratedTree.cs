@@ -10,6 +10,9 @@ using UnityEngine.UIElements;
 public class DecoratedTree : MonoBehaviour
 {
     [SerializeField]
+    private bool m_loadMyTree = false;
+
+    [SerializeField]
     private Transform m_treeDecorations;
 
     [SerializeField]
@@ -26,6 +29,14 @@ public class DecoratedTree : MonoBehaviour
     public Transform TopDecorationParent { get => m_topDecoration; }
 
     public DecoratedTreeData Data { get; private set; } = new DecoratedTreeData();
+
+    void Start()
+    {
+        if (m_loadMyTree)
+        {
+            LoadData(SaveManager.Instance.SaveData.MyTree);
+        }
+    }
 
     public bool TryAddDecoration(TreeDecoration prefab, Color color, Ray ray, out TreeDecoration instance)
     {

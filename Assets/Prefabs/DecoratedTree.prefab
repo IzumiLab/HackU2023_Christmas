@@ -5014,6 +5014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e526e12d6786c7249b052ee4a680df03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_loadMyTree: 0
   m_treeDecorations: {fileID: 8438777553621873094}
   m_topDecoration: {fileID: 970408229529300019}
   m_treeCollider: {fileID: 8374269070652481766}
