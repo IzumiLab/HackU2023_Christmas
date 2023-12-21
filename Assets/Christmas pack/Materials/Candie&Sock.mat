@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: TreeToys
+  m_Name: Candie&Sock
   m_Shader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: _ALPHATEST_ON _EMISSION _NORMALMAP _SPECGLOSSMAP
   m_LightmapFlags: 1
@@ -20,7 +20,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 6003f38020a76509456e91695538d327, type: 3}
+        m_Texture: {fileID: 2800000, guid: e12eb1e9cd020df3aadf986d140753fe, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -36,23 +36,23 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 2800000, guid: 7e4352ae55b4d49696d4d1f454ecbe81, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5f69e09ae5774e9ca2dd8dfc53353af0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 319db6b9a87560504bdff98f115fcf76, type: 3}
+        m_Texture: {fileID: 2800000, guid: a8d0b599cf1395b0a42fe4bd68dcdbac, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 2800000, guid: 43b674cbd59941a1913567e31b4f02e1, type: 3}
+        m_Texture: {fileID: 2800000, guid: e7c02b922e8698b1d4e5f551e9faeb39, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 2800000, guid: bc726e5f4293e0b21275d04422524dff, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9944a03d8a16c18d45d65031515c9ef4, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
-        m_Texture: {fileID: 2800000, guid: b56e2e8c9dd5b57267bf7f06b24a7be3, type: 3}
+        m_Texture: {fileID: 2800000, guid: 7811e52e4956a0040f483e05a1809b6b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -66,7 +66,7 @@ Material:
     - _GlossyReflections: 1
     - _Mode: 1
     - _OcclusionStrength: 1
-    - _Parallax: 0.08
+    - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
