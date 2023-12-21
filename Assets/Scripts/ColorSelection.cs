@@ -22,6 +22,8 @@ public class ColorSelection : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI m_countLabel;
 
+    public Toggle Toggle { get => m_toggle; }
+
     void Awake()
     {
         m_toggle = GetComponent<Toggle>();

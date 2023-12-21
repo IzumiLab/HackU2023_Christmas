@@ -42,12 +42,19 @@ public class TreeEditorController : MonoBehaviour
 
     public void OnEditorPanelClick(BaseEventData data)
     {
+        var save = SaveManager.Instance.SaveData;
+
         var pointerEvent = data as PointerEventData;
         if (m_ui.SelectedDecoration != null && !m_dragging)
         {
+            var decoration = m_ui.SelectedDecoration;
+            var color = m_ui.SelectedColor;
+
             Ray ray = Camera.main.ScreenPointToRay(pointerEvent.pointerCurrentRaycast.screenPosition);
-            if (m_tree.TryAddDecoration(m_ui.SelectedDecoration, m_ui.SelectedColor, ray, out var _))
+            if (m_tree.TryAddDecoration(decoration, color, ray, out var _))
             {
+                save.CollectedLampCount[color] -= decoration.TypeCost;
+                m_ui.BuildAll();
                 m_ui.MarkDirty();
             }
         }

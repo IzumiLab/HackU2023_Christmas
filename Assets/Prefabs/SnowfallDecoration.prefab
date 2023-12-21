@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5970286521873925313}
   - component: {fileID: 1913263606175348963}
   - component: {fileID: 8291767388303453860}
+  - component: {fileID: 1822376990131728671}
   m_Layer: 0
   m_Name: SnowfallDecoration
   m_TagString: Untagged
@@ -4847,15 +4848,39 @@ MonoBehaviour:
   m_name: Snowfall
   m_largeImage: {fileID: 0}
   m_smallImage: {fileID: 0}
-  m_cost: 0
+  m_cost: 100
   m_setColorCallback:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1822376990131728671}
+        m_TargetAssemblyTypeName: SnowfallDecoration, Assembly-CSharp
+        m_MethodName: SetColor
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   Data:
     TypeName: 
     LocalPosition: {x: 0, y: 0, z: 0}
     LocalRotation: {x: 0, y: 0, z: 0, w: 0}
     Color: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &1822376990131728671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3539706839736600424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e025b0d300882d74bbb84ed542debfbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6927062828674801976
 GameObject:
   m_ObjectHideFlags: 0

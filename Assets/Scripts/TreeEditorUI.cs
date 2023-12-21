@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -51,13 +53,14 @@ public class TreeEditorUI : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        var save = SaveManager.Instance;
-        foreach (var (color32, count) in save.SaveData.CollectedLampCount.OrderByDescending(kv => kv.Value))
+        var save = SaveManager.Instance.SaveData;
+        foreach (var (color32, count) in save.CollectedLampCount.OrderByDescending(kv => kv.Value))
         {
             var selection = Instantiate(m_colorSelectionPrefab, m_colorSelectionGroup.transform);
             selection.Color = color32;
             selection.Count = count;
             selection.OnValueChangedCallback = OnColorChanged;
+            selection.Toggle.isOn = color32.CompareRGB(SelectedColor);
             selection.Build(m_colorSelectionGroup);
         }
     }
@@ -69,21 +72,41 @@ public class TreeEditorUI : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach (var decoration in m_decorationDic.Data.Values)
+        var save = SaveManager.Instance.SaveData;
+        var balance = save.CollectedLampCount.GetValueOrDefault(SelectedColor, 0);
+        foreach (var decoration in m_decorationDic.Data.Values.OrderBy(d => d.TypeCost))
         {
             var selection = Instantiate(m_decorationSelectionPrefab, m_decorationSelectionGroup.transform);
+            var canMakePurchase = decoration.TypeCost <= balance;
+
             selection.Data = decoration;
-            selection.CanPurchase = true;
+            selection.CanMakePurchase = canMakePurchase;
             selection.OnValueChangedCallback = OnDecorationChanged;
+
+            if (decoration == SelectedDecoration)
+            {
+                if (canMakePurchase)
+                {
+                    selection.Toggle.isOn = true;
+                }
+                else
+                {
+                    SelectedDecoration = null;
+                    OnSelectionChanged?.Invoke(SelectedColor, SelectedDecoration);
+                }
+            }
+
             selection.Build(m_decorationSelectionGroup);
         }
     }
 
     void OnColorChanged(bool state, Color32 color)
     {
-        if (state)
+        if (state && !color.CompareRGB(SelectedColor))
         {
+            SelectedDecoration = null;
             SelectedColor = color;
+            BuildDecorationSelection();
         }
 
         OnSelectionChanged?.Invoke(SelectedColor, SelectedDecoration);

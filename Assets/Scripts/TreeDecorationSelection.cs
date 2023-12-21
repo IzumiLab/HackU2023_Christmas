@@ -8,7 +8,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Toggle))]
 public class TreeDecorationSelection : MonoBehaviour
 {
-    public bool CanPurchase = true;
+    public bool CanMakePurchase = true;
 
     public TreeDecoration Data;
 
@@ -28,6 +28,8 @@ public class TreeDecorationSelection : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI m_costLabel;
 
+    public Toggle Toggle { get => m_toggle; }
+
     void Awake()
     {
         m_toggle = GetComponent<Toggle>();
@@ -36,8 +38,8 @@ public class TreeDecorationSelection : MonoBehaviour
     public void Build(ToggleGroup group)
     {
         m_toggle.group = group;
-        m_toggle.interactable = CanPurchase;
-        m_costLabel.color = CanPurchase ? Color.white : m_disabledCostLabelColor;
+        m_toggle.interactable = CanMakePurchase;
+        m_costLabel.color = CanMakePurchase ? Color.white : m_disabledCostLabelColor;
 
         if (Data != null)
         {
