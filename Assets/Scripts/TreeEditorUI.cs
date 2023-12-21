@@ -8,8 +8,6 @@ using UnityEngine.UI;
 
 public class TreeEditorUI : MonoBehaviour
 {
-    private DecoratedTree m_tree;
-
     [SerializeField]
     private Button m_finishButton;
 
@@ -38,10 +36,7 @@ public class TreeEditorUI : MonoBehaviour
 
     public TreeDecoration SelectedDecoration { get; private set; }
 
-    void Awake()
-    {
-        m_tree = FindAnyObjectByType<DecoratedTree>();
-    }
+    public UnityEvent<Color32, TreeDecoration> OnSelectionChanged;
 
     public void BuildAll()
     {
@@ -90,6 +85,8 @@ public class TreeEditorUI : MonoBehaviour
         {
             SelectedColor = color;
         }
+
+        OnSelectionChanged?.Invoke(SelectedColor, SelectedDecoration);
     }
 
     void OnDecorationChanged(bool state, TreeDecoration decoration)
@@ -102,19 +99,8 @@ public class TreeEditorUI : MonoBehaviour
         {
             SelectedDecoration = null;
         }
-    }
 
-    public void OnCancelButtonClicked()
-    {
-        SceneManager.LoadScene("Tree");
-    }
-
-    public void OnFinishButtonClicked()
-    {
-        SaveManager.Instance.SaveData.MyTree = m_tree.Data;
-        SaveManager.Instance.ForceSave();
-
-        SceneManager.LoadScene("Tree");
+        OnSelectionChanged?.Invoke(SelectedColor, SelectedDecoration);
     }
 
     public void MarkDirty()
