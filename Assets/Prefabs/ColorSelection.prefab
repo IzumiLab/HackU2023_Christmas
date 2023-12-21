@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5137078053558744345}
   - component: {fileID: 7433080334987959392}
   - component: {fileID: 3041463157167825090}
-  - component: {fileID: 5745416776296806869}
+  - component: {fileID: 666676098754795987}
   - component: {fileID: 1119711246853099225}
   m_Layer: 5
   m_Name: ColorSelection
@@ -62,7 +62,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5, g: 0.34701258, b: 0.1721698, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -79,7 +79,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5745416776296806869
+--- !u!114 &666676098754795987
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,7 +88,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2042892407598375998}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a98125502f715b4b83cfb77b434e436, type: 3}
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -98,15 +98,15 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
-    m_NormalColor: {r: 0.084905684, g: 0.045283034, b: 0, a: 1}
-    m_HighlightedColor: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
-    m_PressedColor: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
-    m_SelectedColor: {r: 0.29411766, g: 0.15686277, b: 0, a: 1}
+    m_NormalColor: {r: 0.08627451, g: 0.047058824, b: 0, a: 1}
+    m_HighlightedColor: {r: 0.13333334, g: 0.13333334, b: 0.13333334, a: 1}
+    m_PressedColor: {r: 0.36862746, g: 0.36862746, b: 0.36862746, a: 1}
+    m_SelectedColor: {r: 0.29411766, g: 0.15686275, b: 0, a: 1}
     m_DisabledColor: {r: 0, g: 0, b: 0, a: 0.5019608}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.06
+    m_FadeDuration: 0.1
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -120,6 +120,13 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 3041463157167825090}
+  toggleTransition: 1
+  graphic: {fileID: 3041463157167825090}
+  m_Group: {fileID: 0}
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_IsOn: 0
 --- !u!114 &1119711246853099225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -134,7 +141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Color: {r: 0, g: 0, b: 0, a: 0}
   Count: 0
-  m_selectable: {fileID: 5745416776296806869}
+  m_toggle: {fileID: 666676098754795987}
   m_lampImage: {fileID: 2843828395982136152}
   m_countLabel: {fileID: 3262164858822385875}
 --- !u!1 &6037114927372838671

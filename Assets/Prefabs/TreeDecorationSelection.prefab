@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5894186536735780367}
   - component: {fileID: 2729943515511590421}
   - component: {fileID: 7626618464378981622}
-  - component: {fileID: 6056162353505906905}
+  - component: {fileID: 1384250866291955972}
   - component: {fileID: 1602816272583400316}
   m_Layer: 5
   m_Name: TreeDecorationSelection
@@ -63,7 +63,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.2509804}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -80,7 +80,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &6056162353505906905
+--- !u!114 &1384250866291955972
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,7 +89,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3785114494135491025}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a98125502f715b4b83cfb77b434e436, type: 3}
+  m_Script: {fileID: 11500000, guid: 9085046f02f69544eb97fd06b6048fe2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
@@ -99,13 +99,13 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.28235295}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0.54509807}
-    m_PressedColor: {r: 0.8392157, g: 0.738695, b: 0.62352943, a: 1}
-    m_SelectedColor: {r: 0.77254903, g: 0.5968628, b: 0.39607844, a: 1}
-    m_DisabledColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 0.5019608}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.8392157, g: 0.7372549, b: 0.62352943, a: 1}
+    m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_DisabledColor: {r: 0.59607846, g: 0.59607846, b: 0.59607846, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.06
   m_SpriteState:
@@ -121,6 +121,13 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 7626618464378981622}
+  toggleTransition: 1
+  graphic: {fileID: 7626618464378981622}
+  m_Group: {fileID: 0}
+  onValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_IsOn: 0
 --- !u!114 &1602816272583400316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,7 +143,7 @@ MonoBehaviour:
   CanPurchase: 1
   Data: {fileID: 0}
   m_disabledCostLabelColor: {r: 0.8679245, g: 0.3234247, b: 0.3234247, a: 1}
-  m_selectable: {fileID: 6056162353505906905}
+  m_toggle: {fileID: 1384250866291955972}
   m_image: {fileID: 8901855100052146026}
   m_nameLabel: {fileID: 8080953260051755632}
   m_costLabel: {fileID: 906208681960013743}

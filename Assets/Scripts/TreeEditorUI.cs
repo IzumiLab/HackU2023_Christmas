@@ -20,52 +20,60 @@ public class TreeEditorUI : MonoBehaviour
     private TreeDecorationSelection m_decorationSelectionPrefab;
 
     [SerializeField]
-    private Transform m_colorSelectionArea;
+    private ToggleGroup m_colorSelectionGroup;
 
     [SerializeField]
-    private Transform m_decorationSelectionArea;
+    private ToggleGroup m_decorationSelectionGroup;
 
     [SerializeField]
     private TreeDecorationDictionary m_decorationDic;
 
-    public void Build()
+    private Color32? m_selectedColor;
+
+    private string m_selectedDecoration = null;
+
+    public void BuildAll()
     {
-        //削除
+        BuildColorSelection();
+        BuildDecorationSelection();
+    }
 
-        foreach (Transform child in m_colorSelectionArea)
+    public void BuildColorSelection()
+    {
+        foreach (Transform child in m_colorSelectionGroup.transform)
         {
             Destroy(child.gameObject);
         }
-        foreach (Transform child in m_decorationSelectionArea)
-        {
-            Destroy(child.gameObject);
-        }
-
-        // ColorSelectionを作成
 
         var save = SaveManager.Instance;
         foreach (var (color32, count) in save.SaveData.CollectedLampCount.OrderByDescending(kv => kv.Value))
         {
-            var selection = Instantiate(m_colorSelectionPrefab, m_colorSelectionArea);
+            var selection = Instantiate(m_colorSelectionPrefab, m_colorSelectionGroup.transform);
             selection.Color = color32;
             selection.Count = count;
-            selection.Build();
+            selection.Build(m_colorSelectionGroup);
         }
+    }
 
-        // TreeDecorationSelectionを作成
+    public void BuildDecorationSelection()
+    {
+        foreach (Transform child in m_decorationSelectionGroup.transform)
+        {
+            Destroy(child.gameObject);
+        }
 
         foreach (var decoration in m_decorationDic.Data.Values)
         {
-            var selection = Instantiate(m_decorationSelectionPrefab, m_decorationSelectionArea);
+            var selection = Instantiate(m_decorationSelectionPrefab, m_decorationSelectionGroup.transform);
             selection.Data = decoration;
             selection.CanPurchase = true;
-            selection.Build();
+            selection.Build(m_decorationSelectionGroup);
         }
     }
 
     void Start()
     {
-        Build();
+        BuildAll();
     }
 
     void Update()

@@ -14,7 +14,7 @@ public class TreeDecorationDictionary : MonoBehaviour
         Data = new Dictionary<string, TreeDecoration>();
         foreach (var prefab in m_prefabs)
         {
-            Data.Add(prefab.Data.TypeName, prefab);
+            Data.Add(prefab.TypeName, prefab);
         }
     }
 }

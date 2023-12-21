@@ -11,7 +11,7 @@ public class ColorSelection : MonoBehaviour
     public int Count;
 
     [SerializeField]
-    private Selectable m_selectable;
+    private Toggle m_toggle;
 
     [SerializeField]
     private Image m_lampImage;
@@ -19,9 +19,10 @@ public class ColorSelection : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI m_countLabel;
 
-    public void Build()
+    public void Build(ToggleGroup group)
     {
-        m_selectable.interactable = Count > 0;
+        m_toggle.group = group;
+        m_toggle.interactable = Count > 0;
         m_lampImage.color = Color;
         m_countLabel.text = $"x{Count}";
     }

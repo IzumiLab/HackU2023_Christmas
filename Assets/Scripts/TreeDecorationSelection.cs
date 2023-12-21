@@ -15,7 +15,7 @@ public class TreeDecorationSelection : MonoBehaviour
     private Color m_disabledCostLabelColor;
 
     [SerializeField]
-    private Selectable m_selectable;
+    private Toggle m_toggle;
 
     [SerializeField]
     private Image m_image;
@@ -26,9 +26,10 @@ public class TreeDecorationSelection : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI m_costLabel;
 
-    public void Build()
+    public void Build(ToggleGroup group)
     {
-        m_selectable.interactable = CanPurchase;
+        m_toggle.group = group;
+        m_toggle.interactable = CanPurchase;
         m_costLabel.color = CanPurchase ? Color.white : m_disabledCostLabelColor;
 
         if (Data != null)
