@@ -1,12 +1,17 @@
 using Cysharp.Threading.Tasks;
 using OpenCVForUnity.CoreModule;
+using OpenCVForUnity.Features2dModule;
 using OpenCVForUnity.ImgprocModule;
 using OpenCVForUnity.UnityUtils;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public struct DetectedLampInfo
 {
@@ -51,6 +56,45 @@ public class LampDetectionHelper : MonoBehaviour
         Imgproc.GaussianBlur(m_grayscaledMat, m_burredMat, new(11, 11), 0);
         Imgproc.threshold(m_burredMat, m_illuminationMask, ValueThreshold, 255, Imgproc.THRESH_BINARY);
 
+        Mat circles = new Mat();
+        Imgproc.HoughCircles(m_burredMat, circles, Imgproc.HOUGH_GRADIENT, 1, 20, 100, 45, 10, 150);
+
+
+        var detectedCircles = new List<DetectedLampInfo>();
+
+        
+        if (circles.cols() > 0)
+        {
+            Debug.Log("circles: " + circles.cols());
+            double[] data;
+            double rho;
+            Point pt = new Point();
+
+            for (int i = 0; i < circles.cols(); i++)
+            {
+                data = circles.get(0, i);
+                pt.x = data[0];
+                pt.y = data[1];
+                rho = data[2];
+                Debug.Log(pt.x + ", " + pt.y);
+                Debug.Log(rho);
+
+                detectedCircles.Add(new DetectedLampInfo
+                {
+                    Position = new(
+                        (float)pt.x,
+                        rgb24Image.height() - (float)pt.y
+                        ),
+                    Area = (
+                        (float)(Math.PI * Math.Pow(rho, 2))
+                        ),
+                    Color = GetColorAtCoordinate(rgb24Image, (int)pt.x, (int)pt.y)
+                });
+            
+            }
+        }
+
+
         using var stats = new Mat();
         using var centroids = new Mat();
 
@@ -90,7 +134,9 @@ public class LampDetectionHelper : MonoBehaviour
             })
             .ToArray();
 
-        return lamps;
+        var merged = lamps.Concat(detectedCircles).ToArray();
+
+        return merged;
     }
 
     private Color GetColorAtCoordinate(Mat image, int x, int y)
