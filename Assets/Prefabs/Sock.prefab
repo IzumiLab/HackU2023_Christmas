@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6952198672641598800}
   - component: {fileID: 2639759129006546468}
   - component: {fileID: 1735339721219852974}
+  - component: {fileID: 5616011057989557447}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -83,6 +84,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &5616011057989557447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744406623062984567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cd82ca4f6d8ada47967304977385b94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SaturationMultiplier: 1.3
 --- !u!1 &3899709199586731871
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +148,19 @@ MonoBehaviour:
   m_cost: 150
   m_setColorCallback:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5616011057989557447}
+        m_TargetAssemblyTypeName: MeshRendererColor, Assembly-CSharp
+        m_MethodName: set_MeshColor
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   Data:
     TypeName: 
     LocalPosition: {x: 0, y: 0, z: 0}
