@@ -14,6 +14,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TreeEditor.unity
     guid: 9c7f3be01371c554b938e5a319200a9d
+  - enabled: 1
+    path: Assets/Scenes/DebugMenuScene.unity
+    guid: 547764e0a4e44c34e8deb93b14482e43
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: c6cf3ea23edc1f441b027ff037aac5e2, type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 75dcb135659ce4443ae067bb1d34c691, type: 2}
