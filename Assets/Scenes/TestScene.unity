@@ -600,6 +600,7 @@ MonoBehaviour:
   LampCountPerSecond: 20
   LampSpawnRadius: 50
   m_movingLampField: {fileID: 316784639}
+  m_lampDetectionPreview: {fileID: 1295333320}
   m_movingLampPrefab: {fileID: 4332512959789811441, guid: 4d969e2171c3d124aa9cbdc337f6aae3, type: 3}
   m_lampCollectionTarget: {fileID: 1123213750}
   m_particles: {fileID: 2031563452}

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class ARMainPanel : MonoBehaviour, IDragHandler
 {
@@ -19,6 +20,9 @@ public class ARMainPanel : MonoBehaviour, IDragHandler
     RectTransform m_movingLampField;
 
     [SerializeField]
+    RawImage m_lampDetectionPreview;
+
+    [SerializeField]
     MovingLamp m_movingLampPrefab;
 
     [SerializeField]
@@ -32,9 +36,14 @@ public class ARMainPanel : MonoBehaviour, IDragHandler
 
     int m_newLampCount = 0;
 
-    public void Start()
+    void Start()
     {
         SaveManager.RequireInstance();
+    }
+
+    void Update()
+    {
+        m_lampDetectionPreview.enabled = SaveManager.Instance.SaveData.ARDemoMode;
     }
 
     public void OnDrag(PointerEventData data)
