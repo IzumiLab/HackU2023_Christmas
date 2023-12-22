@@ -16,6 +16,8 @@ public class SaveData : ISerializationCallbackReceiver
     [SerializeField]
     public DecoratedTreeData MyTree = new DecoratedTreeData();
 
+    public bool ARDemoMode = false;
+
     [SerializeField]
     private List<Color32> CollectedColors;
 
@@ -119,6 +121,12 @@ public class SaveManager : MonoBehaviour
         {
             ForceSave();
         }
+    }
+
+    public void Clear()
+    {
+        m_querySave = false;
+        SaveData = new SaveData();
     }
 
     public bool Load()
