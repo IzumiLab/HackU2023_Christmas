@@ -28,7 +28,7 @@ public class LampDetectionHelper : MonoBehaviour
     /// イルミネーションの閾値
     /// </summary>
     [Range(0, 255)]
-    public int ValueThreshold = 200;
+    public int ValueThreshold = 50;
 
     [Space(10)]
 
@@ -53,46 +53,8 @@ public class LampDetectionHelper : MonoBehaviour
     {
 
         Imgproc.cvtColor(rgb24Image, m_grayscaledMat, Imgproc.COLOR_RGB2GRAY);
-        Imgproc.GaussianBlur(m_grayscaledMat, m_burredMat, new(11, 11), 0);
+        Imgproc.GaussianBlur(m_grayscaledMat, m_burredMat, new(5, 5), 0);
         Imgproc.threshold(m_burredMat, m_illuminationMask, ValueThreshold, 255, Imgproc.THRESH_BINARY);
-
-        Mat circles = new Mat();
-        Imgproc.HoughCircles(m_burredMat, circles, Imgproc.HOUGH_GRADIENT, 1, 20, 100, 45, 10, 150);
-
-
-        var detectedCircles = new List<DetectedLampInfo>();
-
-        
-        if (circles.cols() > 0)
-        {
-            Debug.Log("circles: " + circles.cols());
-            double[] data;
-            double rho;
-            Point pt = new Point();
-
-            for (int i = 0; i < circles.cols(); i++)
-            {
-                data = circles.get(0, i);
-                pt.x = data[0];
-                pt.y = data[1];
-                rho = data[2];
-                Debug.Log(pt.x + ", " + pt.y);
-                Debug.Log(rho);
-
-                detectedCircles.Add(new DetectedLampInfo
-                {
-                    Position = new(
-                        (float)pt.x,
-                        rgb24Image.height() - (float)pt.y
-                        ),
-                    Area = (
-                        (float)(Math.PI * Math.Pow(rho, 2))
-                        ),
-                    Color = GetColorAtCoordinate(rgb24Image, (int)pt.x, (int)pt.y)
-                });
-            
-            }
-        }
 
 
         using var stats = new Mat();
@@ -119,10 +81,14 @@ public class LampDetectionHelper : MonoBehaviour
             UpdateDebugImage(internalImg).Forget();
         }
 
-        var thresholdArea = 12; // 閾値となる面積
+        var minArea = 5; // 面積の下限
+        var maxArea = 10; // 面積の上限
 
         var lamps = Enumerable.Range(1, count - 1)
-            .Where(i => (float)stats.get(i, Imgproc.CC_STAT_AREA)[0] < thresholdArea) // 面積が閾値より大きいものだけを選択
+            .Where(i => {
+                var area = (float)stats.get(i, Imgproc.CC_STAT_AREA)[0];
+                return area >= minArea && area < maxArea;
+            })
             .Select(i => new DetectedLampInfo
             {
                 Position = new(
@@ -134,9 +100,7 @@ public class LampDetectionHelper : MonoBehaviour
             })
             .ToArray();
 
-        var merged = lamps.Concat(detectedCircles).ToArray();
-
-        return merged;
+        return lamps;
     }
 
     private Color GetColorAtCoordinate(Mat image, int x, int y)
