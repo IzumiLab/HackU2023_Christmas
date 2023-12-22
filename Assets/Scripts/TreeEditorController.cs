@@ -29,6 +29,7 @@ public class TreeEditorController : MonoBehaviour
 
     public void OnCancelButtonClick()
     {
+        SaveManager.Instance.Load();
         SceneManager.LoadScene("Tree");
     }
 
