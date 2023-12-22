@@ -4846,8 +4846,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_name: Snowfall
-  m_largeImage: {fileID: 0}
-  m_smallImage: {fileID: 0}
+  m_largeImage: {fileID: 21300000, guid: 25869276bbeac3e489cd1566637b270c, type: 3}
+  m_smallImage: {fileID: 21300000, guid: 25869276bbeac3e489cd1566637b270c, type: 3}
   m_cost: 100
   m_setColorCallback:
     m_PersistentCalls:
